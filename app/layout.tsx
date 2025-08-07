@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     metadataBase: new URL(DEFAULT_URL),
     title: "Next.js and Supabase Starter Kit",
     description: "The fastest way to build apps with Next.js and Supabase",
-    manifest: "/web.manifest",
+    manifest: "/manifest.webmanifest.json",
 };
 
 const geistSans = Geist({

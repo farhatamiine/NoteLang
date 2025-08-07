@@ -39,16 +39,17 @@ export async function updateSession(request: NextRequest) {
     const {data} = await supabase.auth.getClaims();
     const user = data?.claims;
 
-    const PUBLIC_PATHS = ['/login', '/auth', '/'] as const;
+    const PUBLIC_PATHS = ['/login', '/auth'] as const;
     const LOGIN_REDIRECT_PATH = '/auth/login' as const;
 
-    function requiresAuthentication(pathname: string, user: any): boolean {
+    function requiresAuthentication(pathname: string, user: unknown): boolean {
         const isPublicPath = PUBLIC_PATHS.some(path =>
-            path === '/' ? pathname === path : pathname.startsWith(path)
+            pathname.startsWith(path)
         );
 
         return !user && !isPublicPath;
     }
+
 
     if (requiresAuthentication(request.nextUrl.pathname, user)) {
         const url = request.nextUrl.clone();

@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
     matcher: [
-        // Exclude _next, api, manifest, service worker, and all static assets
-        '/((?!_next|api|manifest\\.webmanifest\\.json|sw\\.js|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
+        // Exclude _next, api, manifest, screenshots, sw.js, favicon, and static assets
+        '/((?!_next|api|manifest\\.json|screenshots.*|icons.*|sw\\.js|favicon\\.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
     ],
 };

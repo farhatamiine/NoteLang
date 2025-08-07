@@ -1,62 +1,38 @@
 'use client'
 
 
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {useGetProfileWithStats} from "@/lib/features/profile/useProfile";
 import {Separator} from "@/components/ui/separator";
-import {Edit, FileText, LogOut, Settings, Trash2} from "lucide-react";
+import {Edit, LogOut, Settings, Trash2} from "lucide-react";
 import {Button} from "@/components/ui/button";
 import {ThemeSwitcher} from "@/components/theme-switcher";
+import ProfileHeader from "@/components/profile/ProfileHeader";
+import LanguageInfo from "@/components/profile/LanguageInfo";
+import StatsCard from "@/components/profile/StatsCard";
+import ProfileSkeleton from "@/components/profile/ProfileSkeleton";
 
 export default function ProfilePage() {
 
     const {data: profile, isLoading, isError} = useGetProfileWithStats()
 
+
+    if (isLoading) return <ProfileSkeleton/>;
+    if (isError) return <div>Error loading profile</div>;
+
     return (
         <div className="p-4">
             <div className="mx-auto max-w-md space-y-6">
                 {/* Profile Header */}
-                <div className="text-center space-y-4 pt-6">
-                    <Avatar className="w-16 h-16 mx-auto border border-gray-200">
-                        <AvatarImage
-                            src={`https://ui-avatars.com/api/?name=${profile?.data?.firstName}+${profile?.data?.lastName}`}
-                            alt="Amine"/>
-                        <AvatarFallback className="text-lg font-medium bg-gray-100 text-gray-800">
-                            A
-                        </AvatarFallback>
-                    </Avatar>
-
-                    <div>
-                        <h1 className="text-xl font-semibold dark:text-white text-black">{profile?.data?.firstName} {profile?.data?.lastName}</h1>
-                    </div>
-                </div>
+                <ProfileHeader firstName={profile?.data?.firstName} lastName={profile?.data?.lastName}/>
 
                 <Separator className="border-gray-200"/>
 
                 {/* Language Info */}
-                <div className="space-y-3 text-sm">
-                    <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Native Language:</span>
-                        <span className="text-black font-medium">{profile?.data?.nativeLanguage.toUpperCase()}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Target Language:</span>
-                        <span className="text-black font-medium">{profile?.data?.targetLanguage.toUpperCase()}</span>
-                    </div>
-                </div>
+                <LanguageInfo targetLanguage={profile?.data?.targetLanguage}
+                              nativeLanguage={profile?.data?.nativeLanguage}/>
 
                 {/* Stats Cards */}
-                <div className="space-y-3">
-                    <div className="border border-gray-200 p-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                                <FileText className="w-4 h-4 text-gray-600"/>
-                                <span className="text-gray-800">Notes Created:</span>
-                            </div>
-                            <span className="text-lg font-semibold text-black">{profile?.data?.noteCount}</span>
-                        </div>
-                    </div>
-                </div>
+                <StatsCard noteCount={profile?.data?.noteCount}/>
 
                 {/* Action Buttons */}
                 <div className="flex gap-3">

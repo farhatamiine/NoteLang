@@ -82,6 +82,7 @@ async function saveProfileToDatabase(
 
         return {success: true};
     } catch (error) {
+        console.log(error)
         return {error: ERROR_MESSAGES.GENERIC_ERROR};
     }
 }

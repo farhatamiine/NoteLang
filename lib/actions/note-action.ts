@@ -4,7 +4,15 @@
 import {createClient} from "@/lib/supabase/server";
 import {Note} from "@/lib/types";
 
-export async function addNoteAction(prevState: any, formData: FormData) {
+
+type NoteState = {
+    notes: Note[];
+    loading: boolean;
+    error: Error | null;
+};
+
+
+export async function addNoteAction(prevState: NoteState, formData: FormData) {
     const supabase = await createClient()
 
     const nativeText = formData.get("native_text") as string;
@@ -25,15 +33,47 @@ export async function addNoteAction(prevState: any, formData: FormData) {
     return {success: !error, error: error?.message};
 }
 
+
+export async function getNoteBySlugAction(slug: string): Promise<NotesResponse> {
+    try {
+        const supabase = await createClient();
+        const {
+            data: {user},
+        } = await supabase.auth.getUser();
+
+        if (!user) {
+            return handleError("User authentication required");
+        }
+
+        const {data: note, error} = await supabase
+            .from("Notes")
+            .select("*,NoteExample:NoteExample(*)")
+            .eq("user_id", user?.id)
+            .eq("slug", slug)
+            .single<Note>();
+
+        if (error) {
+            return handleError(error.message);
+        }
+
+        return {
+            success: true,
+            data: note as Note
+        };
+
+    } catch (error) {
+        return handleError(
+            error instanceof Error ? error.message : "An unexpected error occurred"
+        );
+    }
+}
+
+
 // Custom types for better type safety and reusability
 export type NotesResponse = {
     success: boolean;
-    data?: Note[];
+    data?: Note[] | Note;
     error?: string;
-};
-
-type SupabaseError = {
-    message: string;
 };
 
 // Database table name constant

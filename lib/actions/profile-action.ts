@@ -5,6 +5,7 @@ import {onBoardingFormSchema} from "@/lib/schema";
 import {createClient} from "@/lib/supabase/server";
 
 import {SupabaseClient} from '@supabase/supabase-js';
+import {getCurrentUser} from "@/lib/auth/getCurrentUser";
 
 /** Represents user profile data structure */
 interface UserProfileData {
@@ -55,20 +56,15 @@ function validateProfileData(data: UserProfileData) {
     return onBoardingFormSchema.safeParse(data);
 }
 
-async function saveProfileToDatabase(
-    supabase: SupabaseClient,
-    profileData: UserProfileData
-): Promise<ProfileResponse> {
+async function saveProfileToDatabase(supabase: SupabaseClient, profileData: UserProfileData): Promise<ProfileResponse> {
     try {
 
-        const {
-            data: {user},
-            error: userError,
-        } = await supabase.auth.getUser();
+        const user = await getCurrentUser();
 
-        if (userError || !user) {
+        if (!user) {
             return {error: "User not authenticated"};
         }
+
 
         const {error} = await supabase.from('profiles').insert({
             ...profileData,
@@ -89,14 +85,13 @@ async function saveProfileToDatabase(
 
 
 export async function getUserProfileWithStats(): Promise<ProfileResponse> {
-    const supabase = await createClient()
-    const {
-        data: {user},
-        error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
+    const supabase = await createClient();
+    const user = await getCurrentUser();
+
+    if (!user) {
         return {error: "User not authenticated"};
     }
+
     const {data: profile, error: profileError} = await supabase.from('profiles').select('*').eq('id', user.id).single()
     if (profileError || !profile) {
         console.log("Error fetching profile:", profileError?.message || "No profile found")

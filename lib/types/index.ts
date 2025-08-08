@@ -1,4 +1,4 @@
-export interface Note {
+interface Note {
     id: string;
     nativeText: string;
     learningText: string;
@@ -18,7 +18,7 @@ export interface Note {
     NoteExample?: NoteExample[];
 }
 
-export interface NoteExample {
+interface NoteExample {
     id: string;
     noteId: string;
     native: string;
@@ -26,4 +26,17 @@ export interface NoteExample {
     pronunciation?: string;
     createdAt: string;
     updatedAt: string;
+}
+
+interface Result<T> {
+    success: boolean;
+    data?: T;
+    error?: string;
+}
+
+
+export type {
+    Result,
+    NoteExample,
+    Note,
 }

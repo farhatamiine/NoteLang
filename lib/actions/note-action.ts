@@ -2,7 +2,10 @@
 "use server";
 
 import {createClient} from "@/lib/supabase/server";
-import {Note} from "@/lib/types";
+import {Note, Result} from "@/lib/types";
+import {getCurrentUser} from "@/lib/auth/getCurrentUser";
+import {NoteService} from "@/lib/services/note-service";
+import {SupabaseNoteRepository} from "@/lib/repositories/note-repository";
 
 
 type NoteState = {
@@ -11,109 +14,75 @@ type NoteState = {
     error: Error | null;
 };
 
-
-export async function addNoteAction(prevState: NoteState, formData: FormData) {
-    const supabase = await createClient()
-
-    const nativeText = formData.get("native_text") as string;
-    const learningText = formData.get("learning_text") as string;
-
-    const {
-        data: {user},
-    } = await supabase.auth.getUser();
-
-    if (!user) return {error: "Not authenticated"};
-
-    const {error} = await supabase.from("Notes").insert({
-        nativeText,
-        learningText,
-        user_id: user.id,
-    });
-
-    return {success: !error, error: error?.message};
-}
-
-
-export async function getNoteBySlugAction(slug: string): Promise<NotesResponse> {
-    try {
-        const supabase = await createClient();
-        const {
-            data: {user},
-        } = await supabase.auth.getUser();
-
-        if (!user) {
-            return handleError("User authentication required");
-        }
-
-        const {data: note, error} = await supabase
-            .from("Notes")
-            .select("*,NoteExample:NoteExample(*)")
-            .eq("user_id", user?.id)
-            .eq("slug", slug)
-            .single<Note>();
-
-        if (error) {
-            return handleError(error.message);
-        }
-
-        return {
-            success: true,
-            data: note as Note
-        };
-
-    } catch (error) {
-        return handleError(
-            error instanceof Error ? error.message : "An unexpected error occurred"
-        );
-    }
-}
-
-
-// Custom types for better type safety and reusability
 export type NotesResponse = {
-    success: boolean;
+    success?: boolean;
     data?: Note[] | Note;
     error?: string;
 };
 
-// Database table name constant
-const NOTES_TABLE = "Notes" as const;
 
-// Main function with improved type safety and error handling
-export async function getNotesAction(): Promise<NotesResponse> {
+
+async function withNoteService<T>(
+    action: (service: NoteService, userId: string) => Promise<Result<T>>
+): Promise<Result<T>> {
     try {
         const supabase = await createClient();
-        const {data: {user}} = await supabase.auth.getUser();
+        const user = await getCurrentUser();
 
         if (!user) {
-            return handleError("User authentication required");
+            return {success: false, error: "Not authenticated"};
         }
 
-        const {data, error} = await supabase
-            .from(NOTES_TABLE)
-            .select("*")
-            .eq("user_id", user.id);
+        const noteRepository = new SupabaseNoteRepository(supabase);
+        const noteService = new NoteService(noteRepository);
 
-        if (error) {
-            return handleError(error.message);
-        }
-
-        return {
-            success: true,
-            data: data as Note[]
-        };
-
+        return await action(noteService, user.id);
     } catch (error) {
-        return handleError(
-            error instanceof Error ? error.message : "An unexpected error occurred"
-        );
+        return {
+            success: false,
+            error: error instanceof Error ? error.message : "Unknown error"
+        };
     }
 }
 
-// Helper function for consistent error handling
-function handleError(message: string): NotesResponse {
-    return {
-        success: false,
-        error: message
-    };
+
+export async function addNoteAction(prevState: NoteState, formData: FormData) {
+    return withNoteService(async (service, userId) => {
+        const note: Omit<Note, 'id' | 'created_at'> = {
+            nativeText: formData.get("native_text") as string,
+            learningText: formData.get("learning_text") as string,
+            user_id: userId,
+            pronunciation: "",
+            noteType: formData.get("noteType") as string,
+            reviewCount: 0,
+            category: formData.get("category") as string,
+            lastReviewedAt: null,
+            nextReviewAt: null,
+            ease: null,
+            tags: formData.getAll("tags") as string[],
+            createdAt: "",
+            updatedAt: "",
+            slug: ""
+        };
+
+        return await service.createNote(note);
+    });
 }
+
+
+export async function getNoteBySlugAction(slug: string) {
+    return withNoteService(async (service, userId) => {
+        return await service.getNoteBySlug(slug, userId);
+    });
+
+}
+
+// Main function with improved type safety and error handling
+export async function getNotesAction() {
+    return withNoteService(async (service, userId) => {
+        return await service.getUserNotes(userId);
+    });
+
+}
+
+

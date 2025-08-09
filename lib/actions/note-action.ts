@@ -2,10 +2,11 @@
 "use server";
 
 import {createClient} from "@/lib/supabase/server";
-import {Note, Result} from "@/lib/types";
+import {AiInput, Note, Result} from "@/lib/types";
 import {getCurrentUser} from "@/lib/auth/getCurrentUser";
 import {NoteService} from "@/lib/services/note-service";
 import {SupabaseNoteRepository} from "@/lib/repositories/note-repository";
+
 
 
 type NoteState = {
@@ -19,7 +20,6 @@ export type NotesResponse = {
     data?: Note[] | Note;
     error?: string;
 };
-
 
 
 async function withNoteService<T>(
@@ -85,4 +85,10 @@ export async function getNotesAction() {
 
 }
 
+
+export async function generateWordExamplesAction(noteId: string, input: AiInput) {
+    return withNoteService(async (service, userId) => {
+        return service.generateWordExample(noteId, userId, input)
+    });
+}
 

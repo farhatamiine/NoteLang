@@ -5,18 +5,37 @@ import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {BookOpen, Plus, Tag, Volume2} from "lucide-react";
-import {getDifficultyColor} from "@/lib/utils";
+import {getDifficultyColor, ok} from "@/lib/utils";
 import {useParams} from "next/navigation";
 import {useNoteBySlug} from "@/lib/features/note/useNotes";
 import {NoteDetailSkeleton} from "@/components/note/NoteDetailSkeleton";
-import {Note} from "@/lib/types";
+import {AiInput, Note} from "@/lib/types";
+import {useGenerateExample} from "@/lib/features/useAi";
+import LanguageExamples from "@/components/note/LanguageExamples";
 
 export default function NoteDetailPage() {
 
     const params = useParams<{ slug: string; }>()
 
     const {data: noteResponse, isLoading, error} = useNoteBySlug(params.slug || "");
-    const isGeneratingExample = false;
+    const generateExampleMutation = useGenerateExample(noteResponse?.data?.id || "");
+
+
+
+    const handleGenerate = () => {
+        if (!noteResponse?.data) return;
+
+        const input: AiInput = {
+            word: { learning: noteResponse.data.learningText },
+            nativeLanguage: "French",
+            level: noteResponse.data.difficulty || "beginner",
+            includeTransliteration: true,
+            maxWords: 14,
+            requireGenderVariants: false,
+        };
+
+        generateExampleMutation.mutate(input);
+    };
 
     if (isLoading) return <NoteDetailSkeleton/>;
     if (error || !noteResponse) {
@@ -70,54 +89,25 @@ export default function NoteDetailPage() {
                 <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => console.log("Generate Example")}
-                    disabled={false}
+                    onClick={handleGenerate}
+                    disabled={generateExampleMutation.isPending}
                     className="h-9"
                 >
-                    {isGeneratingExample ? (
+                    {generateExampleMutation.isPending ? (
                         <>
-                            <div
-                                className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent mr-2"/>
+                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent mr-2" />
                             Generating...
                         </>
                     ) : (
                         <>
-                            <Plus className="h-4 w-4 mr-2"/>
+                            <Plus className="h-4 w-4 mr-2" />
                             Generate
                         </>
                     )}
                 </Button>
             </div>
-            {note.NoteExample && note.NoteExample.length > 0 && (
-                <Card>
-
-                    <CardContent className="space-y-4">
-                        {note.NoteExample.map((example) => (
-                            <div key={example.id} className="space-y-3 p-4 bg-muted/30 rounded-lg">
-                                <div className="space-y-2">
-                                    <p className="font-medium text-base">{example.native}</p>
-                                    <p className="text-muted-foreground">{example.learning}</p>
-                                </div>
-
-                                {example.pronunciation && (
-                                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-sm text-muted-foreground">
-                        {example.pronunciation}
-                      </span>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            onClick={() => console.log(example.learning)}
-                                            className="h-8 w-8 p-0"
-                                        >
-                                            <Volume2 className="h-4 w-4"/>
-                                        </Button>
-                                    </div>
-                                )}
-                            </div>
-                        ))}
-                    </CardContent>
-                </Card>
+            {ok(generateExampleMutation.data) && (
+                <LanguageExamples examples={generateExampleMutation.data.data} />
             )}
             {/* Tags */}
             {note.NoteExample && note.NoteExample.length > 0 && (

@@ -19,3 +19,8 @@ export const getDifficultyColor = (difficulty?: string) => {
         default: return "bg-gray-100 text-gray-800 border-gray-200"
     }
 }
+
+
+export function ok<T>(r: { success: boolean; data?: T } | undefined): r is { success: true; data: T } {
+    return !!r && r.success && r.data !== undefined;
+}

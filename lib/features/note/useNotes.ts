@@ -17,6 +17,7 @@ interface NoteQueries {
         isLoading: boolean;
         error: Error | null;
     };
+
 }
 
 
@@ -37,7 +38,9 @@ export const noteQueries: NoteQueries = {
             enabled: !!slug,
         });
     },
+
 };
+
 
 // Optional: Export individual hooks if you prefer
 export const {useNotes, useNoteBySlug} = noteQueries;

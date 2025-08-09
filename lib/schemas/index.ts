@@ -37,3 +37,35 @@ export const insertNoteSchema = noteSchema.omit({
 });
 
 export type InsertNoteFormData = z.infer<typeof insertNoteSchema>;
+
+
+export const OutputSchema = z.object({
+    examples: z.array(z.object({
+        native: z.string(),
+        learning: z.string(),
+        pronunciation: z.string().optional(),
+        difficulty: z.enum(["beginner","intermediate","advanced"]),
+        explanation: z.string(),
+        tokens: z.array(z.object({
+            word: z.string(),
+            translit: z.string().optional(),
+            pos: z.string().optional(),
+            gloss: z.string(),
+            note: z.string().optional(),
+        })),
+        morphology: z.object({
+            gender: z.enum(["none","masculine","feminine","plural"]),
+            notes: z.string().optional(),
+        }).optional(),
+    })).length(3),
+    meta: z.object({
+        topic: z.string().optional(),
+        level: z.enum(["beginner","intermediate","advanced"]),
+        style: z.enum(["formal","casual","slang"]).optional(),
+        maxWords: z.number().optional(),
+        model: z.string(),
+    }),
+});
+
+export type GeneratedExample = z.infer<typeof OutputSchema>["examples"][number];
+export type GeneratedExamplesPayload = z.infer<typeof OutputSchema>;

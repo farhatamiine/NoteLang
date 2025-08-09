@@ -1,5 +1,6 @@
 import {NoteRepository} from "@/lib/repositories/note-repository";
-import {Note, Result} from "@/lib/types";
+import {AiInput, GeneratedExamplesPayload, Note, Result} from "@/lib/types";
+
 
 export class NoteService {
     constructor(private readonly noteRepository: NoteRepository) {
@@ -29,6 +30,10 @@ export class NoteService {
 
     async getNoteBySlug(slug: string, userId: string): Promise<Result<Note>> {
         return this.noteRepository.getBySlug(slug, userId);
+    }
+
+    async generateWordExample(noteId: string, userId: string, input: AiInput): Promise<Result<GeneratedExamplesPayload>> {
+        return this.noteRepository.generateWordExample(noteId, input, userId);
     }
 
 }

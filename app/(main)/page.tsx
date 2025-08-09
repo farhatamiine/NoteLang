@@ -6,7 +6,7 @@ import {SkeletonCard} from "@/components/SkeletonCard";
 import NotesList from "@/components/note/NotesList";
 
 export default function Home() {
-    const {data: notes, isLoading: isNoteLoading, isError: isNoteError} = useNotes();
+    const {data: notes, isLoading: isNoteLoading, error: isNoteError} = useNotes();
 
 
     if (isNoteLoading) return <SkeletonCard/>;

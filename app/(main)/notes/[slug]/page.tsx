@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Plus, Tag, Volume2 } from "lucide-react";
-import { getDifficultyColor, ok } from "@/lib/utils";
+import { getDifficultyColor } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { useNoteBySlug } from "@/lib/features/note/useNotes";
 import { NoteDetailSkeleton } from "@/components/note/NoteDetailSkeleton";

@@ -178,7 +178,7 @@ export class SupabaseNoteRepository implements NoteRepository {
       };
 
     // 6) Save flattened rows
-    const rows = output.examples.map((ex, idx) => ({
+    const rows = output.examples.map((ex) => ({
       setId: setRow.id,
       noteId,
       native: ex.native,

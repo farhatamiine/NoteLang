@@ -1,5 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { GeneratedExamplesPayload, NoteExample } from "@/lib/types";
+import { NoteExample } from "@/lib/types";
 import { NoteExampleCard } from "@/components/note/NoteExampleCard";
 type NoteExamplesPayload = {
   examples: NoteExample[];

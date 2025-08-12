@@ -3,7 +3,7 @@
 // We import the server action directly. Since this is a server component,
 // this code will not be bundled for the client.
 import React from 'react';
-import {generateWordExamples} from "@/lib/actions/generateWordExample";
+import {generateWordExamples} from "@/lib/ai/generateWordExample";
 
 // This function is an async Server Component.
 // The data fetching and generation happen on the server before the page is rendered.

@@ -43,8 +43,8 @@ export function MobileLayout({children, navbarProps = {}}: MobileLayoutProps) {
     return (
         <div className="flex flex-col min-h-svh">
             <AppNavbar {...finalNavbarProps} />
-            <div className="flex-grow overflow-y-auto">
-                <div className="max-w-md mx-auto">{children}</div>
+            <div className="flex-1 flex flex-col ">
+                {children}
             </div>
             <BottomNavigation/>
         </div>

@@ -4,9 +4,13 @@ import Container from "@/components/Container";
 import {useNotes} from "@/lib/features/note/useNotes";
 import {SkeletonCard} from "@/components/SkeletonCard";
 import NotesList from "@/components/note/NotesList";
+import {EmptyNotesState} from "@/components/note/EmptyNotesState";
+import {useRouter} from "next/navigation";
+import {ROUTES} from "@/lib/const";
 
 export default function Home() {
     const {data: notes, isLoading: isNoteLoading, error: isNoteError} = useNotes();
+    const router = useRouter();
 
 
     if (isNoteLoading) return <SkeletonCard/>;
@@ -19,7 +23,14 @@ export default function Home() {
     }
     return (
         <Container>
-            <NotesList notes={notes.data}/>
+            {
+                notes?.data.length > 0 ?
+                    <NotesList notes={notes.data}/>
+                    :
+                    <EmptyNotesState onCreateNote={() => {
+                        router.push(ROUTES.NOTE_CREATE)
+                    }}/>
+            }
         </Container>
     );
 }

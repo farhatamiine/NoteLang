@@ -56,6 +56,20 @@ const dynamicRouteConfigs: RoutePattern[] = [
         }
     },
     {
+        pattern: /^\/notes\/editor\/create$/,
+        config: {
+            title: "Add new Note",
+            showBackButton: true,
+        }
+    },
+    {
+        pattern: /^\/notes\/editor\/update$/,
+        config: {
+            title: "Edit my Note",
+            showBackButton: true,
+        }
+    },
+    {
         pattern: /^\/notes\/[^/]+$/,
         config: {
             title: "Note Details",

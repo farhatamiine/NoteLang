@@ -34,7 +34,7 @@ export function NoteFormManager({
         <div className="flex-1 overflow-y-auto p-2">
             <div className="max-w-3xl mx-auto">
                 <div>
-                    <CardContent className="p-6">
+                    <CardContent className="p-4">
                         <NoteForm
                             mode={mode}
                             initialData={initialData}

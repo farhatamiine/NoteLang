@@ -1,5 +1,7 @@
 import {NoteRepository} from "@/lib/repositories/note-repository";
 import {AiInput, GeneratedExamplesPayload, Note, Result} from "@/lib/types";
+import {NoteUpdate} from "@/lib/schemas";
+import {stripNulls} from "@/lib/utils";
 
 
 export class NoteService {
@@ -28,12 +30,30 @@ export class NoteService {
         return this.noteRepository.getAll(userId);
     }
 
-    async getNoteBySlug(slug: string, userId: string): Promise<Result<Note>> {
-        return this.noteRepository.getBySlug(slug, userId);
+    async getNoteById(id: string, userId: string): Promise<Result<Note>> {
+        return this.noteRepository.getById(id, userId);
     }
 
     async generateWordExample(noteId: string, userId: string, input: AiInput): Promise<Result<GeneratedExamplesPayload>> {
         return this.noteRepository.generateWordExample(noteId, input, userId);
+    }
+
+    async updateNote(noteData: NoteUpdate, userId: string): Promise<Result<Note>> {
+        if (!noteData.id) return {success: false, error: "Missing note id"};
+        const existing = await this.noteRepository.getById(noteData.id, userId);
+        if (!existing.success || !existing.data) {
+            return {success: false, error: "Note not found or not yours"};
+        }
+        const {id, ...raw} = noteData;
+
+        const patch: Partial<Note> = stripNulls({
+            ...raw,
+            // if difficulty can be null from the form, drop it instead of sending null
+            difficulty: raw.difficulty ?? undefined,
+            updatedAt: new Date().toISOString(),
+        });
+
+        return this.noteRepository.updateNote(id, userId, patch);
     }
 
 }

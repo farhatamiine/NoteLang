@@ -28,7 +28,7 @@ function NoteCard({note}: { note: Note }) {
     return (
         <>
             <Link
-                href={`/notes/${note.slug}`}
+                href={`/notes/${note.id}`}
                 prefetch
                 className="hidden"
                 aria-hidden="true"
@@ -37,7 +37,7 @@ function NoteCard({note}: { note: Note }) {
                 data-testid={`note-${note.id}`}
                 key={note.id}
                 className="bg-card border rounded-lg p-4 mb-2 cursor-pointer hover:bg-gray-50"
-                onClick={() => navigate.push(`/notes/${note.slug}`)}
+                onClick={() => navigate.push(`/notes/${note.id}`)}
             >
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">

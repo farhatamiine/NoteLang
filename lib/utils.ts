@@ -29,4 +29,8 @@ export function ok<T>(
     return !!r && r.success && r.data !== undefined;
 }
 
+export const stripNulls = <T extends Record<string, unknown>>(o: T): Partial<T> =>
+    Object.fromEntries(
+        Object.entries(o).filter(([, v]) => v !== null)
+    ) as Partial<T>;
 

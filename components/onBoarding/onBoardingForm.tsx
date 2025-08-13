@@ -1,7 +1,6 @@
 import React from 'react';
 import {Control, useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {onBoardingFormSchema} from "@/lib/schema";
 import {z} from "zod";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form"
 import {Input} from "@/components/ui/input";
@@ -10,6 +9,7 @@ import {Button} from "@/components/ui/button";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {LANGUAGES} from "@/lib/const";
 import {useSaveProfile} from "@/lib/features/profile/useProfile";
+import {onBoardingFormSchema} from "@/lib/schemas";
 
 type OnBoardingFormValues = z.infer<typeof onBoardingFormSchema>;
 

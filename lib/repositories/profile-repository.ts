@@ -2,7 +2,7 @@ import {CreateProfileData, Profile, ProfileStats, ProfileWithStats, Result, Upda
 import {SupabaseClient} from "@supabase/supabase-js";
 import {ERROR_MESSAGES, TABLES} from "@/lib/const";
 import {getCurrentUser} from "@/lib/auth/getCurrentUser";
-import {onBoardingFormSchema} from "@/lib/schema";
+import {onBoardingFormSchema} from "@/lib/schemas";
 
 
 export interface ProfileRepository {
@@ -182,12 +182,12 @@ export class SupabaseProfileRepository implements ProfileRepository {
     async getWithStats(userId: string): Promise<Result<ProfileWithStats>> {
         const profileResult = await this.getById(userId);
         if (!profileResult.success || !profileResult.data) {
-            return {success: false, error: profileResult.error || "Profile not found"};
+            return {success: false, error: "Profile not found"};
         }
 
         const statsResult = await this.getStats(userId);
         if (!statsResult.success || !statsResult.data) {
-            return {success: false, error: statsResult.error || "Stats not found"};
+            return {success: false, error: "Stats not found"};
         }
 
         const profileWithStats: ProfileWithStats = {

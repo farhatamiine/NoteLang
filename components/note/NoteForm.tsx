@@ -23,6 +23,7 @@ interface NoteFormProps {
 }
 
 const NOTE_TYPES = [
+    {value: "word", label: "Word"},
     {value: "vocabulary", label: "Vocabulary"},
     {value: "phrase", label: "Phrase"},
     {value: "sentence", label: "Sentence"},
@@ -35,10 +36,8 @@ const CATEGORIES = [
     {value: "business", label: "Business"},
     {value: "travel", label: "Travel"},
     {value: "food", label: "Food & Dining"},
-    {value: "education", label: "Education"},
-    {value: "technology", label: "Technology"},
     {value: "culture", label: "Culture"},
-    {value: "other", label: "Other"}
+    {value: "custom", label: "Custom"}
 ]
 
 const DIFFICULTIES = [
@@ -49,6 +48,7 @@ const DIFFICULTIES = [
 
 export function NoteForm({initialData, onSubmit, onCancel, isLoading = false, mode}: NoteFormProps) {
     const [tagInput, setTagInput] = React.useState("")
+    const [customCategory, setCustomCategory] = React.useState("")
 
     const form = useForm<NoteFormValues>({
         resolver: zodResolver(noteFormSchema),
@@ -64,6 +64,7 @@ export function NoteForm({initialData, onSubmit, onCancel, isLoading = false, mo
     })
 
     const watchedTags = form.watch("tags")
+    const watchedCategory = form.watch("category")
 
     const handleAddTag = () => {
         if (tagInput.trim() && !watchedTags.includes(tagInput.trim())) {
@@ -144,7 +145,7 @@ export function NoteForm({initialData, onSubmit, onCancel, isLoading = false, mo
                     />
 
                     {/* Note Type and Category */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4">
                         <FormField
                             control={form.control}
                             name="noteType"
@@ -191,6 +192,16 @@ export function NoteForm({initialData, onSubmit, onCancel, isLoading = false, mo
                                         </SelectContent>
                                     </Select>
                                     <FormMessage/>
+                                    {watchedCategory === "custom" && (
+                                        <Input
+                                            placeholder="Enter your own category"
+                                            value={customCategory}
+                                            onChange={(e) => {
+                                                setCustomCategory(e.target.value);
+                                                field.onChange(e.target.value);
+                                            }}
+                                        />
+                                    )}
                                 </FormItem>
                             )}
                         />

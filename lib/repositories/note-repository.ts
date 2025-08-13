@@ -1,17 +1,20 @@
 import {AiInput, GeneratedExamplesPayload, Note, Result} from "@/lib/types";
 import {SupabaseClient} from "@supabase/supabase-js";
 import {generateWordExamples} from "@/lib/ai/generateWordExample";
-import crypto from "node:crypto";
+import {createHash} from "node:crypto";
+
 import {defaultModel} from "../ai";
 
 interface NoteRepository {
     add(note: Note): Promise<Result<Note>>;
 
-    getById(noteId: string): Promise<Result<Note>>;
+    getById(noteId: string, userId: string): Promise<Result<Note>>;
 
     delete(noteId: string): Promise<Result<Note>>;
 
     getBySlug(slug: string, userId: string): Promise<Result<Note>>;
+
+    updateNote(id: string, userId: string, payload: Partial<Note>): Promise<Result<Note>>;
 
     getAll(userId: string): Promise<Result<Note[]>>;
 
@@ -30,9 +33,9 @@ export class SupabaseNoteRepository implements NoteRepository {
     constructor(private readonly db: SupabaseClient) {
     }
 
+
     private hash(input: unknown) {
-        return crypto
-            .createHash("sha256")
+        return createHash("sha256")
             .update(JSON.stringify(input))
             .digest("hex");
     }
@@ -50,6 +53,19 @@ export class SupabaseNoteRepository implements NoteRepository {
 
         return {success: true, data};
     }
+
+    async updateNote(id: string, userId: string, payload: Partial<Note>): Promise<Result<Note>> {
+        const {data, error} = await this.db
+            .from(this.NOTES_TABLE)
+            .update(payload)
+            .eq("id", id)
+            .eq("user_id", userId)
+            .select()
+            .single();
+        if (error) return {success: false, error: error.message};
+        return {success: true, data};
+    }
+
 
     async getAll(userId: string): Promise<Result<Note[]>> {
         const {data, error} = await this.db
@@ -88,14 +104,15 @@ export class SupabaseNoteRepository implements NoteRepository {
             return {success: false, error: error.message};
         }
 
-        return {success: true};
+        return {success: true,};
     }
 
-    async getById(noteId: string): Promise<Result<Note>> {
+    async getById(noteId: string, userId: string): Promise<Result<Note>> {
         const {data, error} = await this.db
             .from(this.NOTES_TABLE)
-            .select("*")
+            .select("*,NoteExample(*)")
             .eq("id", noteId)
+            .eq("user_id", userId)
             .single();
 
         if (error) {

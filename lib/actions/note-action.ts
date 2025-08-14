@@ -70,12 +70,7 @@ export async function addNoteAction(prevState: NoteState, formData: FormData) {
 }
 
 
-export async function getNoteBySlugAction(slug: string) {
-    return withNoteService(async (service, userId) => {
-        return await service.getNoteBySlug(slug, userId);
-    });
 
-}
 
 // Main function with improved type safety and error handling
 export async function getNotesAction() {

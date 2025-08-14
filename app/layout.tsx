@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import {Geist} from "next/font/google";
+import {Nunito} from "next/font/google";
 import {ThemeProvider} from "next-themes";
 import "./styles/globals.css";
 import React from "react";
@@ -14,10 +14,11 @@ export const metadata: Metadata = {
     manifest: "/manifest.json",
 };
 
-const geistSans = Geist({
-    variable: "--font-geist-sans",
-    display: "swap",
+const nunito = Nunito({
     subsets: ["latin"],
+    weight: ["200", "300", "400", "500", "600", "700", "800", "900", "1000"], // choose weights you need
+    style: ["normal", "italic"],
+    display: "swap",
 });
 export default function RootLayout({
                                        children,
@@ -26,7 +27,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-        <body className={`${geistSans.className} antialiased  bg-background`}>
+        <body className={`${nunito.className} antialiased  bg-background`}>
         <Providers>
             <ThemeProvider
                 attribute="class"

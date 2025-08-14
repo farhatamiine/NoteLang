@@ -66,3 +66,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+@layer components {
+    .card-interactive {
+        @apply relative bg-white border-2 border-gray-200 rounded-2xl p-5 mb-3 cursor-pointer
+        transform transition-all duration-200
+        active:scale-95 active:shadow-xl active:border-amber-300
+        focus:scale-95 focus:shadow-xl focus:border-amber-300;
+    }
+}

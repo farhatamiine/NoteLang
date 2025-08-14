@@ -4,6 +4,7 @@ import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {queryKeys} from "@/lib/queries/queryKeys";
 import * as api from "@/lib/api/notes";
 import {useRouter} from "next/navigation";
+import {ROUTES} from "@/lib/const";
 
 
 const STALE_TIME = 1000 * 60 * 5; // 5 minutes
@@ -49,12 +50,15 @@ export function useUpdateNote() {
     });
 }
 
-export function useDeleteNote() {
+export function useDeleteNote(noteId: string) {
     const qc = useQueryClient();
+    const router = useRouter();
     return useMutation({
-        mutationFn: api.deleteNote,
+        mutationFn: () => api.deleteNote(noteId),
         onSuccess: () => {
             qc.invalidateQueries({queryKey: queryKeys.notes});
+            qc.invalidateQueries({queryKey: queryKeys.note(noteId)});
+            router.push(ROUTES.HOME)
         },
     });
 }

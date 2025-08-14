@@ -10,7 +10,7 @@ interface NoteRepository {
 
     getById(noteId: string, userId: string): Promise<Result<Note>>;
 
-    delete(noteId: string): Promise<Result<Note>>;
+    delete(noteId: string, userId: string): Promise<Result<boolean>>;
 
     getBySlug(slug: string, userId: string): Promise<Result<Note>>;
 
@@ -95,11 +95,12 @@ export class SupabaseNoteRepository implements NoteRepository {
         return {success: true, data};
     }
 
-    async delete(noteId: string): Promise<Result<Note>> {
+    async delete(noteId: string, userId: string): Promise<Result<boolean>> {
         const {error} = await this.db
             .from(this.NOTES_TABLE)
             .delete()
-            .eq("id", noteId);
+            .eq('user_id', userId)
+            .eq("id", noteId)
         if (error) {
             return {success: false, error: error.message};
         }

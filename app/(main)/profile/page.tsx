@@ -11,7 +11,7 @@ import ProfileSkeleton from "@/components/profile/ProfileSkeleton";
 
 export default function ProfilePage() {
 
-    const {data: profile, isLoading, isError} = useGetProfileWithStats()
+    const {data, isLoading, isError} = useGetProfileWithStats()
     const mutation = useSignOut();
 
 
@@ -29,59 +29,60 @@ export default function ProfilePage() {
 
     return (
         <div className="p-4 h-full overflow-y-auto">
-            <div className="mx-auto max-w-md space-y-6">
-                {/* Profile Header */}
-                <ProfileHeader firstName={profile?.data?.firstName} lastName={profile?.data?.lastName}/>
+            {/*<div className="mx-auto max-w-md space-y-6">*/}
+            {/*    /!* Profile Header *!/*/}
+            {/*    <ProfileHeader firstName={profile} lastName={data.lastName}/>*/}
 
-                <Separator className="border-gray-200"/>
+            {/*    <Separator className="border-gray-200"/>*/}
 
-                {/* Language Info */}
-                <LanguageInfo targetLanguage={profile?.data?.targetLanguage}
-                              nativeLanguage={profile?.data?.nativeLanguage}/>
+            {/*    /!* Language Info *!/*/}
+            {/*    <LanguageInfo targetLanguage={profile?.targetLanguage}*/}
+            {/*                  nativeLanguage={profile?.nativeLanguage}/>*/}
 
-                {/*/!* Stats Cards *!/*/}
-                {/*<StatsCard noteCount={profile?.data?.noteCount}/>*/}
+            {/*    /!*//*!/*/}
+            {/*    /!*<StatsCard noteCount={profile?.noteCount}/>*!/*/}
 
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                    <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">
-                        <Edit className="w-4 h-4 mr-2"/>
-                        Edit Profile
-                    </Button>
-                    <Button onClick={handleSignOut} variant="outline"
-                            className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50">
-                        <LogOut className="w-4 h-4 mr-2"/>
-                        Logout
-                    </Button>
-                </div>
+            {/*    /!* Action Buttons *!/*/}
+            {/*    <div className="flex gap-3">*/}
+            {/*        <Button className="flex-1 bg-blue-600 hover:bg-blue-700 text-white">*/}
+            {/*            <Edit className="w-4 h-4 mr-2"/>*/}
+            {/*            Edit Profile*/}
+            {/*        </Button>*/}
+            {/*        <Button onClick={handleSignOut} variant="outline"*/}
+            {/*                className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-50">*/}
+            {/*            <LogOut className="w-4 h-4 mr-2"/>*/}
+            {/*            Logout*/}
+            {/*        </Button>*/}
+            {/*    </div>*/}
 
-                <Separator className="border-gray-200"/>
+            {/*    <Separator className="border-gray-200"/>*/}
 
-                {/* Settings Section */}
-                <div className="border border-gray-200">
-                    <div className="border-b border-gray-200 p-4">
-                        <h3 className="flex items-center text-base font-medium text-black">
-                            <Settings className="w-4 h-4 mr-2"/>
-                            Settings
-                        </h3>
-                    </div>
-                    <div className="py-4 space-y-4">
-                        {/*/!* Dark Mode Toggle *!/*/}
-                        {/*<div className="flex items-center justify-between">*/}
-                        {/*    <span className="text-gray-800">Dark mode:</span>*/}
+            {/*    /!* Settings Section *!/*/}
+            {/*    <div className="border border-gray-200">*/}
+            {/*        <div className="border-b border-gray-200 p-4">*/}
+            {/*            <h3 className="flex items-center text-base font-medium text-black">*/}
+            {/*                <Settings className="w-4 h-4 mr-2"/>*/}
+            {/*                Settings*/}
+            {/*            </h3>*/}
+            {/*        </div>*/}
+            {/*        <div className="py-4 space-y-4">*/}
+            {/*            /!*//*!/*/}
+            {/*            /!*<div className="flex items-center justify-between">*!/*/}
+            {/*            /!*    <span className="text-gray-800">Dark mode:</span>*!/*/}
 
-                        {/*    <ThemeSwitcher/>*/}
-                        {/*</div>*/}
+            {/*            /!*    <ThemeSwitcher/>*!/*/}
+            {/*            /!*</div>*!/*/}
 
 
-                        {/* Delete Account */}
-                        <Button variant="ghost" className="w-full justify-start text-red-700 hover:bg-gray-50 p-0">
-                            <Trash2 className="w-4 h-4 mr-2"/>
-                            Delete My Account
-                        </Button>
-                    </div>
-                </div>
-            </div>
+            {/*            /!* Delete Account *!/*/}
+            {/*            <Button variant="ghost" className="w-full justify-start text-red-700 hover:bg-gray-50 p-0">*/}
+            {/*                <Trash2 className="w-4 h-4 mr-2"/>*/}
+            {/*                Delete My Account*/}
+            {/*            </Button>*/}
+            {/*        </div>*/}
+            {/*    </div>*/}
+            {/*</div>*/}
+            SOON
         </div>
     );
 }

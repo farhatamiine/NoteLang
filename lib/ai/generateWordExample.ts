@@ -15,8 +15,8 @@ export async function generateWordExamples(
     const user = await getUserProfileWithStats().catch(() => null);
 
     // Safe fallbacks (don’t crash if profile fields are missing)
-    const targetLang = user?.data?.targetLanguage ?? "Darija";
-    const nativeLang = user?.data?.nativeLanguage ?? "French";
+    const targetLang =  "Darija";
+    const nativeLang =  "French";
 
     // IMPORTANT: Ensure numeric; your cache uses this value too
     const normalizedInput = {

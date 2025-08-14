@@ -38,6 +38,10 @@ export class NoteService {
         return this.noteRepository.generateWordExample(noteId, input, userId);
     }
 
+    async deleteNote(noteId: string, userId: string): Promise<Result<boolean>> {
+        return this.noteRepository.delete(noteId, userId);
+    }
+
     async updateNote(noteData: NoteUpdate, userId: string): Promise<Result<Note>> {
         if (!noteData.id) return {success: false, error: "Missing note id"};
         const existing = await this.noteRepository.getById(noteData.id, userId);

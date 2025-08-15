@@ -1,4 +1,4 @@
-import {AiInput, GeneratedExamplesPayload, Note, Result} from "@/lib/types";
+import {AiInput, CreateNoteInput, GeneratedExamplesPayload, Note, Result} from "@/lib/types";
 import {SupabaseClient} from "@supabase/supabase-js";
 import {generateWordExamples} from "@/lib/ai/generateWordExample";
 import {createHash} from "node:crypto";
@@ -6,7 +6,7 @@ import {createHash} from "node:crypto";
 import {defaultModel} from "../ai";
 
 interface NoteRepository {
-    add(note: Note): Promise<Result<Note>>;
+    add(note: CreateNoteInput,userId:string): Promise<Result<Note>>;
 
     getById(noteId: string, userId: string): Promise<Result<Note>>;
 
@@ -40,7 +40,7 @@ export class SupabaseNoteRepository implements NoteRepository {
             .digest("hex");
     }
 
-    async add(note: Note): Promise<Result<Note>> {
+    async add(note: Note,userId:string): Promise<Result<Note>> {
         const {data, error} = await this.db
             .from(this.NOTES_TABLE)
             .insert(note)

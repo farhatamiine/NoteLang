@@ -7,7 +7,7 @@ export const noteFormSchema = z.object({
     pronunciation: z.string().optional(),
     noteType: z.string().min(1, "Note type is required"),
     category: z.string().min(1, "Category is required"),
-    tags: z.array(z.string()).default([]),
+    tags: z.array(z.string()),
     difficulty: DifficultyEnum.optional(),
 });
 

@@ -213,20 +213,36 @@ export default function NoteDetailPage() {
 
     const note = noteResponse;
 
+
+
+
     return (
         <div className="w-full mx-auto py-10 px-5 space-y-6">
-            <div className="flex items-center justify-center mb-6">
-                <div className="flex items-center gap-2">
-            <span
-                className={`px-3 py-1 rounded-full text-sm font-medium border ${getDifficultyColor(noteResponse.difficulty)}`}
-            >
-              {noteResponse.difficulty}
-            </span>
-                    <span
-                        className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(noteResponse.category || "")}`}>
-              {noteResponse.category}
-            </span>
-                </div>
+
+            <div className="flex justify-end mb-4">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="hover:bg-amber-100 text-amber-600 hover:text-amber-700 rounded-full transition-colors duration-200 h-8 w-8 p-0"
+                            aria-label="More options"
+                        >
+                            <MoreVertical className="h-4 w-4"/>
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-white border-amber-200">
+                        <DropdownMenuItem onClick={handleEdit} className="hover:bg-amber-50">
+                            <Edit className="h-4 w-4 mr-2"/>
+                            Edit Note
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleDelete}
+                                          className="text-red-600 hover:text-red-700 hover:bg-red-50">
+                            <Trash2 className="h-4 w-4 mr-2"/>
+                            Delete Note
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
             <div className="space-y-4">
                 <div className="text-center space-y-3">
@@ -240,19 +256,36 @@ export default function NoteDetailPage() {
                     )}
                 </div>
                 {/* Tags */}
-                {noteResponse.tags && noteResponse.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 justify-center">
-                        {noteResponse.tags.map((tag, index) => (
-                            <span
-                                key={index}
-                                className="flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm border border-gray-200"
-                            >
-                                <Tag className="w-3 h-3"/>
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-                )}
+                <div className="flex flex-wrap gap-2 justify-center mb-6">
+                    {/* Tags */}
+                    {noteResponse.tags?.map((tag, index) => (
+                        <span
+                            key={index}
+                            className="flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm border border-gray-200"
+                        >
+      <Tag className="w-3 h-3" />
+                            {tag}
+    </span>
+                    ))}
+
+                    {/* Difficulty */}
+                    <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium border ${getDifficultyColor(
+                            noteResponse.difficulty
+                        )}`}
+                    >
+    {noteResponse.difficulty}
+  </span>
+
+                    {/* Category */}
+                    <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium border ${getCategoryColor(
+                            noteResponse.category || ""
+                        )}`}
+                    >
+    {noteResponse.category}
+  </span>
+                </div>
 
                 {/* Metadata */}
                 <div

@@ -7,6 +7,7 @@ import {EmptyNotesState} from "@/components/note/EmptyNotesState";
 import {useRouter} from "next/navigation";
 import {ROUTES} from "@/lib/const";
 import {useNotes} from "@/lib/queries/notes";
+import FloatingAddButton from "@/components/FloatingAddButton";
 
 export default function Home() {
     const {data: notes, isLoading: isNoteLoading, error: isNoteError} = useNotes();
@@ -21,6 +22,11 @@ export default function Home() {
             </div>
         );
     }
+
+    const goToCreateNote = () => {
+        router.push(ROUTES.NOTE_CREATE)
+    }
+
     return (
         <Container>
             {
@@ -31,6 +37,7 @@ export default function Home() {
                         router.push(ROUTES.NOTE_CREATE)
                     }}/>
             }
+            <FloatingAddButton onClick={goToCreateNote}/>
         </Container>
     );
 }

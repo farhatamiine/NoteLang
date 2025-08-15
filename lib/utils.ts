@@ -1,5 +1,6 @@
 import {type ClassValue, clsx} from "clsx";
 import {twMerge} from "tailwind-merge";
+import slugify from "slugify";
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -34,3 +35,13 @@ export const stripNulls = <T extends Record<string, unknown>>(o: T): Partial<T> 
         Object.entries(o).filter(([, v]) => v !== null)
     ) as Partial<T>;
 
+export function generateUniqueSlug(base: string) {
+    const slugBase = slugify(base, {
+        lower: true,
+        strict: true,
+        locale: "fr"
+    });
+    // Append a short unique suffix: timestamp + random string
+    const uniqueSuffix = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    return `${slugBase}-${uniqueSuffix}`;
+}

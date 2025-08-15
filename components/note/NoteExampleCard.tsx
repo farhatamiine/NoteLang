@@ -94,7 +94,7 @@ export function NoteExampleCard({
                                     <Volume2 className="h-3 w-3"/>
                                 </Button>
                             </div>
-                            <p className="text-lg font-semibold text-right" dir="rtl">
+                            <p className="text-lg font-semibold" >
                                 {example.learning}
                             </p>
                         </div>
@@ -156,7 +156,7 @@ export function NoteExampleCard({
                                 <CollapsibleContent className="mt-3">
                                     <div className="grid gap-2">
                                         {example.tokens.map((token, tokenIndex) => (
-                                            <div key={tokenIndex} className="flex items-center justify-between gap-3 p-3 bg-gray-50 rounded-lg">
+                                            <div key={tokenIndex} className="flex items-center justify-between gap-3 p-3 bg-gray-100 rounded-lg">
                                                 <div className={"flex flex-col p-0"}>
                                                     <span className="font-medium text-gray-800 min-w-0 flex-1">{token.word}</span>
                                                     <span className={`  text-xs font-bold  ${getPosColor(token.pos)}`}>

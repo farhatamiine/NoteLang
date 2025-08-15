@@ -46,29 +46,6 @@ async function withNoteService<T>(
 }
 
 
-export async function addNoteAction(prevState: NoteState, formData: FormData) {
-    return withNoteService(async (service, userId) => {
-        const note: Omit<Note, 'id' | 'created_at'> = {
-            nativeText: formData.get("native_text") as string,
-            learningText: formData.get("learning_text") as string,
-            user_id: userId,
-            pronunciation: "",
-            noteType: formData.get("noteType") as string,
-            reviewCount: 0,
-            category: formData.get("category") as string,
-            lastReviewedAt: null,
-            nextReviewAt: null,
-            ease: null,
-            tags: formData.getAll("tags") as string[],
-            createdAt: "",
-            updatedAt: "",
-            slug: ""
-        };
-
-        return await service.createNote(note);
-    });
-}
-
 
 
 

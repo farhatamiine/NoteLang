@@ -1,28 +1,29 @@
 import {NoteRepository} from "@/lib/repositories/note-repository";
-import {AiInput, GeneratedExamplesPayload, Note, Result} from "@/lib/types";
+import {AiInput, CreateNoteInput, GeneratedExamplesPayload, Note, Result} from "@/lib/types";
 import {NoteUpdate} from "@/lib/schemas";
-import {stripNulls} from "@/lib/utils";
+import {generateUniqueSlug, stripNulls} from "@/lib/utils";
+import slugify from "slugify";
 
 
 export class NoteService {
     constructor(private readonly noteRepository: NoteRepository) {
     }
 
-    async createNote(noteData: Omit<Note, 'id' | 'created_at'>): Promise<Result<Note>> {
+    async createNote(noteData:CreateNoteInput,userId:string): Promise<Result<Note>> {
         if (!noteData.nativeText || !noteData.learningText) {
             return {success: false, error: 'Native and learning text are required'};
         }
         // Set default values
-        const note: Note = {
+
+        const note: CreateNoteInput = {
             ...noteData,
-            id: crypto.randomUUID(), // or however you generate IDs
+            user_id: userId,
             reviewCount: noteData.reviewCount ?? 0,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
             tags: noteData.tags ?? [],
+            slug:generateUniqueSlug(noteData.slug),
             ease: noteData.ease ?? 2.5, // default ease factor
         };
-        return this.noteRepository.add(note);
+        return this.noteRepository.add(note,userId);
 
     }
 

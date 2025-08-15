@@ -19,3 +19,19 @@ export interface Note {
     user_id: string;
     NoteExample?: NoteExample[];
 }
+
+export type CreateNoteInput = {
+    nativeText: string;
+    learningText: string;
+    pronunciation?: string | null;
+    noteType?: string | null;
+    category?: string | null;
+    tags?: string[];
+    difficulty?: "beginner" | "intermediate" | "advanced";
+    reviewCount?: number;
+    lastReviewedAt?: string | null;
+    slug: string;
+    user_id: string;
+    nextReviewAt?: string | null;
+    ease?: number | null;
+};

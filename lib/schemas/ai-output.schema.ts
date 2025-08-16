@@ -24,6 +24,14 @@ const AiExampleSchema = z.object({
         .optional(),
 });
 
+
+export const AiInputSchema = z.object({
+    targetLanguage: z.string().min(1, "Target language is required"),
+    nativeLanguage: z.string().min(1, "Native language is required"),
+});
+
+export type AiInput = z.infer<typeof AiInputSchema>;
+
 export const OutputSchema = z.object({
     examples: z.array(AiExampleSchema).length(3),
     meta: z.object({

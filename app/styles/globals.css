@@ -89,9 +89,11 @@
 
     .fab {
         @apply fixed bottom-24 right-6 w-14 h-14 bg-white border-2 border-emerald-200 rounded-full shadow-lg
-        transition-all duration-200  focus:outline-none focus:ring-4 focus:ring-emerald-100 z-50
+        transition-all active:scale-105 duration-200 focus:scale-95
+        focus:shadow-xl focus:bg-emerald-300
+        focus:border-emerald-300  focus:ring-4 focus:ring-emerald-400 z-50
     }
     .fab-icon{
-        @apply w-6 h-6 text-emerald-600 mx-auto  transition-colors duration-200
+        @apply w-6 h-6 text-emerald-600 mx-auto transition-colors duration-200
     }
 }

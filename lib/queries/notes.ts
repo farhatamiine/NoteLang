@@ -5,6 +5,7 @@ import {queryKeys} from "@/lib/queries/queryKeys";
 import * as api from "@/lib/api/notes";
 import {useRouter} from "next/navigation";
 import {ROUTES} from "@/lib/const";
+import {AiInput} from "@/lib/types";
 
 
 const STALE_TIME = 1000 * 60 * 5; // 5 minutes
@@ -61,4 +62,17 @@ export function useDeleteNote(noteId: string) {
             router.push(ROUTES.HOME)
         },
     });
+}
+
+
+export function useGenerateWordExample(noteId: string, input: AiInput) {
+    const qc = useQueryClient();
+    const router = useRouter();
+    return useMutation({
+        mutationFn: () => api.generateWordExample(noteId, input),
+        onSuccess: () => {
+            qc.invalidateQueries({queryKey: queryKeys.notes});
+            qc.invalidateQueries({queryKey: queryKeys.note(noteId)});
+        }
+    })
 }

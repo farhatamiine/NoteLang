@@ -4,6 +4,7 @@ import {generateWordExamples} from "@/lib/ai/generateWordExample";
 import {createHash} from "node:crypto";
 
 import {defaultModel} from "../ai";
+import {toDomainNote} from "@/lib/mappers/note";
 
 interface NoteRepository {
     add(note: CreateNoteInput,userId:string): Promise<Result<Note>>;
@@ -130,18 +131,20 @@ export class SupabaseNoteRepository implements NoteRepository {
     ): Promise<Result<GeneratedExamplesPayload>> {
         const {data: noteRow, error: noteErr} = await this.db
             .from(this.NOTES_TABLE)
-            .select("id,user_id")
+            .select("id,nativeText,learningText,user_id")
             .eq("id", noteId)
             .single();
         if (noteErr || !noteRow || noteRow.user_id !== userId) {
             return {success: false, error: "Note not found or not yours."};
         }
 
+        console.log(noteRow)
         // 2) Normalize + hash
         const normalized = {
             noteId,
             word: input.word, // { learning, latin?, pos? }
             nativeLanguage: input.nativeLanguage,
+            targetLanguage: input.targetLanguage,
             topic: input.topic ?? null,
             level: input.level,
             style: input.style ?? null,
@@ -171,9 +174,7 @@ export class SupabaseNoteRepository implements NoteRepository {
                 data: cached.output_json as GeneratedExamplesPayload,
             };
         }
-        const output = (await generateWordExamples(
-            normalized
-        )) as GeneratedExamplesPayload;
+        const output = await generateWordExamples(normalized,toDomainNote(noteRow));
         if (!output?.examples?.length)
             return {success: false, error: "AI returned no examples."};
 

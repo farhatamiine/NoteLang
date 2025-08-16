@@ -180,6 +180,7 @@ export class SupabaseProfileRepository implements ProfileRepository {
     }
 
     async getWithStats(userId: string): Promise<Result<ProfileWithStats>> {
+
         const profileResult = await this.getById(userId);
         if (!profileResult.success || !profileResult.data) {
             return {success: false, error: "Profile not found"};

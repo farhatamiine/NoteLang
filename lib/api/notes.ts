@@ -1,6 +1,6 @@
 // lib/api/notes.ts
-import type { Note } from "@/lib/types";
 import {NoteUpdate} from "@/lib/schemas";
+import {AiInput, Note} from "@/lib/types";
 
 export async function getNotes(): Promise<Note[]> {
     const res = await fetch("/api/notes");
@@ -17,7 +17,7 @@ export async function getNoteById(id: string): Promise<Note> {
 export async function createNote(payload: Partial<Note>): Promise<Note> {
     const res = await fetch("/api/notes", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("Failed to create note");
@@ -27,7 +27,7 @@ export async function createNote(payload: Partial<Note>): Promise<Note> {
 export async function updateNote(payload: NoteUpdate): Promise<Note> {
     const res = await fetch(`/api/notes/${payload.id}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload),
     });
     if (!res.ok) throw new Error("Failed to update note");
@@ -35,7 +35,17 @@ export async function updateNote(payload: NoteUpdate): Promise<Note> {
 }
 
 export async function deleteNote(id: string): Promise<{ success: boolean }> {
-    const res = await fetch(`/api/notes/${id}`, { method: "DELETE" });
+    const res = await fetch(`/api/notes/${id}`, {method: "DELETE"});
     if (!res.ok) throw new Error("Failed to delete note");
+    return res.json();
+}
+
+export async function generateWordExample(id: string, payload: AiInput): Promise<{ success: boolean }> {
+    const res = await fetch(`/api/notes/${id}/examples`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(payload),
+    });
+    if (!res.ok) throw new Error("Failed to generate example");
     return res.json();
 }

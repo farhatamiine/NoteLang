@@ -1,8 +1,9 @@
 export type AiInput = {
-    word: { learning: string; latin?: string; pos?: string };
+    word?: { learning: string; latin?: string; pos?: string };
     nativeLanguage: string;
+    targetLanguage: string;
     topic?: string | null;
-    level: string;
+    level?: string;
     style?: "formal" | "casual" | "slang" | string | null;
     includeTransliteration?: boolean;
     maxWords?: number;

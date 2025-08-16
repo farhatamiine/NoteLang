@@ -6,13 +6,18 @@ import {NoteFormManager} from "@/components/note/NoteFormManager";
 import {useCreateNote} from "@/lib/queries/notes";
 
 function CreateNotePage() {
-    const isLoading = false
     const router = useRouter()
     const createNoteMutation = useCreateNote()
 
     const handleSubmit = async (data: NoteFormValues) => {
-        console.log(data)
-        createNoteMutation.mutate(data)
+        createNoteMutation.mutate(data,{
+            onSuccess: () => {
+                router.push("/"); // or wherever you want to redirect
+            },
+            onError: (error) => {
+                console.error("Error creating note:", error);
+            },
+        })
     }
 
     const handleCancel = () => {
@@ -24,7 +29,7 @@ function CreateNotePage() {
             mode="create"
             onSubmit={handleSubmit}
             onCancel={handleCancel}
-            isLoading={isLoading}
+            isLoading={createNoteMutation.isPending}
         />
     )
 

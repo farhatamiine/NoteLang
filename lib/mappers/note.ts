@@ -5,10 +5,10 @@ export function toDomainNote(row: any): Note {
     return {
         id: row.id,
         user_id: row.user_id,
-        nativeText: row.native_text,
-        learningText: row.learning_text,
+        nativeText: row.nativeText,
+        learningText: row.learningText,
         pronunciation: row.pronunciation ?? undefined,
-        noteType: row.note_type,
+        noteType: row.noteType,
         category: row.category,
         tags: row.tags ?? [],
         difficulty: row.difficulty ?? undefined,

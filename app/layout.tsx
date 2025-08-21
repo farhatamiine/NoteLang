@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
-import { ThemeProvider } from "next-themes";
+import type {Metadata} from "next";
+import {Nunito} from "next/font/google";
+import {ThemeProvider} from "next-themes";
 import "./styles/globals.css";
 import {ReactNode} from "react";
 import {DEFAULT_URL} from "@/lib/const";
-
+import ClientProviders from "@/components/shared/ClientProviders";
 
 
 export const metadata: Metadata = {
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
         "Duolingo alternative",
         "spaced repetition",
     ],
-    authors: [{ name: "Amine Farhat" }],
+    authors: [{name: "Amine Farhat"}],
     creator: "Amine Farhat",
     openGraph: {
         type: "website",
@@ -49,28 +49,30 @@ export const metadata: Metadata = {
 };
 
 const nunitoSans = Nunito({
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
+    display: "swap",
+    subsets: ["latin"],
 });
 
 export default function RootLayout({
-  children,
-}: Readonly<{
-  children: ReactNode;
+                                       children,
+                                   }: Readonly<{
+    children: ReactNode;
 }>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${nunitoSans.className} antialiased`}>
+    return (
+        <html lang="en" suppressHydrationWarning>
+        <body className={`${nunitoSans.className} antialiased`}>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
+            attribute="class"
+            defaultTheme="light"
+            enableSystem
+            disableTransitionOnChange
         >
-          {children}
+            <ClientProviders>
+                {children}
+            </ClientProviders>
         </ThemeProvider>
-      </body>
-    </html>
-  );
+        </body>
+        </html>
+    );
 }

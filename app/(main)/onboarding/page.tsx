@@ -1,9 +1,35 @@
 'use client'
 import OnBoardingForm from "@/components/onboarding/on-boarding-form";
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 import {Globe} from "lucide-react";
+import {useGetProfileById} from "@/lib/queries/profile";
+import {useAuthStore} from "@/lib/stores/use-auth-store";
+import {useRouter} from "next/navigation";
+import {useEffect} from "react";
 
 export default function OnBoardingPage() {
+    const user = useAuthStore((state) => state.user)
+    const router = useRouter();
+
+    // Redirect if no user
+    useEffect(() => {
+        if (!user) {
+            router.push("/auth/login");
+        }
+    }, [user, router]);
+
+
+    const {data: profile, isLoading, error} = useGetProfileById(user?.id ?? "",);
+
+    useEffect(() => {
+        if (profile?.native_language) {
+            router.push("/");
+        }
+    }, [profile, router]);
+
+    if (isLoading) return <div>Loading...</div>
+    if (error) return <div>Error: {error.message}</div>
+
 
     return (
         <div

@@ -23,4 +23,8 @@ export class ProfileService {
         return await this.profileRepository.create(mapped);
     }
 
+    async getProfileById(userId: string): Promise<Profile | null> {
+        return await this.profileRepository.findById(userId);
+    }
+
 }

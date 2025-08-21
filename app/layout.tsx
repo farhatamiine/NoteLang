@@ -5,6 +5,7 @@ import "./styles/globals.css";
 import {ReactNode} from "react";
 import {DEFAULT_URL} from "@/lib/const";
 import ClientProviders from "@/components/shared/ClientProviders";
+import AuthProvider from "@/components/shared/AuthProvider";
 
 
 export const metadata: Metadata = {
@@ -69,7 +70,10 @@ export default function RootLayout({
             disableTransitionOnChange
         >
             <ClientProviders>
-                {children}
+                <AuthProvider>
+                    {children}
+                </AuthProvider>
+
             </ClientProviders>
         </ThemeProvider>
         </body>

@@ -1,5 +1,5 @@
 import {ProfileService} from "@/service/profile/profile.service";
-import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {CreateProfileData} from "@/lib/types/profile.types";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
@@ -21,5 +21,17 @@ export const useCreateProfile = () => {
             toast.error(error instanceof Error ? error.message : 'Failed to create profile');
 
         }
+    })
+}
+
+
+export const useGetProfileById = (userId: string) => {
+    return useQuery({
+        queryKey: ["profile", userId],
+        queryFn: () => {
+            if (!userId) throw new Error("No userId provided");
+            return profileService.getProfileById(userId)
+        },
+        enabled: !!userId,
     })
 }
